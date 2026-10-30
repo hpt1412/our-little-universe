@@ -59,11 +59,133 @@
       white-space: normal;
       pointer-events: none;
     }
+
+    #password-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      display: grid;
+      place-items: center;
+      padding: max(24px, env(safe-area-inset-top)) 24px
+        max(24px, env(safe-area-inset-bottom));
+      background:
+        radial-gradient(ellipse at center, #260817 0%, #090308 55%, #000 100%);
+    }
+
+    #password-screen[hidden] {
+      display: none;
+    }
+
+    .password-card {
+      width: 100%;
+      max-width: 380px;
+      padding: clamp(24px, 8vw, 40px);
+      border: 1px solid rgba(255, 181, 211, 0.3);
+      border-radius: 20px;
+      background: rgba(15, 5, 12, 0.88);
+      box-shadow: 0 0 45px rgba(255, 23, 79, 0.16);
+      color: #ffb5d3;
+      text-align: center;
+    }
+
+    .password-card h1 {
+      margin-bottom: 12px;
+      font-size: clamp(21px, 6vw, 27px);
+      font-weight: normal;
+      text-shadow: 0 0 16px rgba(255, 59, 131, 0.7);
+    }
+
+    .password-card p {
+      margin-bottom: 24px;
+      color: #e6a3bd;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    #password-input {
+      width: 100%;
+      min-height: 48px;
+      margin-bottom: 14px;
+      padding: 10px 14px;
+      border: 1px solid rgba(255, 181, 211, 0.5);
+      border-radius: 10px;
+      outline: none;
+      background: #100710;
+      color: #fff;
+      font: inherit;
+      font-size: 18px;
+      text-align: center;
+      letter-spacing: 0.3em;
+    }
+
+    #password-input:focus {
+      border-color: #ff5b91;
+      box-shadow: 0 0 0 3px rgba(255, 91, 145, 0.2);
+    }
+
+    #password-submit {
+      width: 100%;
+      min-height: 48px;
+      border: 0;
+      border-radius: 10px;
+      background: linear-gradient(100deg, #d91e5b, #ff5b91);
+      color: #fff;
+      font: inherit;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #password-error {
+      min-height: 24px;
+      margin: 14px 0 0;
+      color: #ff8eaa;
+      font-size: 14px;
+    }
   </style>
 </head>
 
 <body>
-  <div id="hint">A LITTLE UNIVERSE OF LOVE</div>
+  <section id="password-screen" aria-labelledby="password-title">
+    <div class="password-card">
+      <h1 id="password-title">Một món quà nhỏ ❤️</h1>
+      <p>Nhập 1 mật khẩu 4 số để mở quà nhé</p>
+      <form id="password-form">
+        <input
+          id="password-input"
+          type="password"
+          inputmode="numeric"
+          maxlength="4"
+          autocomplete="off"
+          aria-label="Mật khẩu"
+          required
+        />
+        <button id="password-submit" type="submit">Mở quà ngay</button>
+        <p id="password-error" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+  <script>
+    const passwordForm = document.getElementById("password-form");
+    const passwordInput = document.getElementById("password-input");
+    const passwordError = document.getElementById("password-error");
+    const passwordScreen = document.getElementById("password-screen");
+
+    passwordForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      if (passwordInput.value === "2102") {
+        passwordScreen.hidden = true;
+        return;
+      }
+
+      passwordError.textContent = "Mật khẩu chưa đúng, thử lại nhé 💕";
+      passwordInput.value = "";
+      passwordInput.focus();
+    });
+  </script>
+
+  <div id="hint">HOANGPHUONGTHAO iu LETHEPHUONGHUY</div>
   <div id="message">CHỒNG XÚI GIỎI LẮM, EM TỰ HÀO VỀ ANH</div>
 
   <script type="module">
@@ -131,7 +253,7 @@
         y = (Math.random() * 2 - 1) * 1.35;
       } while (!insideHeart(x, y));
 
-      // Giữ nguyên trục Y để đầu nhọn hướng xuống dưới
+      // Giữ trục Y để đầu nhọn hướng xuống dưới trên màn hình
       const px = x * 3.2;
       const py = y * 3.2;
 
